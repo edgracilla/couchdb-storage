@@ -1,13 +1,13 @@
 'use strict';
 
 var platform = require('./platform'),
+	isPlainObject = require('lodash.isplainobject'),
+	isArray = require('lodash.isarray'),
+	async = require('async'),
 	database;
 
-/**
- * Emitted when device data is received. This is the event to listen to in order to get real-time data feed from the connected devices.
- * @param {object} data The data coming from the device represented as JSON Object.
- */
-platform.on('data', function (data) {
+
+let sendData = (data) => {
 	database.insert(data, function(err, body) {
 		if (err) {
 			console.error('Error inserting record on CouchDB', err);
@@ -28,6 +28,19 @@ platform.on('data', function (data) {
 			}));
 		}
 	});
+};
+
+platform.on('data', function (data) {
+	if(isPlainObject(data)){
+		sendData(data);
+	}
+	else if(isArray(data)){
+		async.each(data, function(datum){
+			sendData(datum);
+		});
+	}
+	else
+		platform.handleException(new Error(`Invalid data received. Data must be a valid Array/JSON Object or a collection of objects. Data: ${data}`));
 });
 
 /**
