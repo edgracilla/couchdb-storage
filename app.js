@@ -1,42 +1,38 @@
 'use strict';
 
-var platform = require('./platform'),
+var uuid          = require('node-uuid'),
+	async         = require('async'),
+	isArray       = require('lodash.isarray'),
+	platform      = require('./platform'),
 	isPlainObject = require('lodash.isplainobject'),
-	isArray = require('lodash.isarray'),
-	async = require('async'),
 	database;
 
+let sendData = function (data, callback) {
+	if (!data._id) data._id = uuid.v4();
 
-let sendData = (data) => {
-	database.insert(data, function(err, body) {
-		if (err) {
-			console.error('Error inserting record on CouchDB', err);
-			if (err.statusCode && err.statusCode === 409) {
-				platform.log(JSON.stringify({
-					title: 'Error inserting record to CouchDB.',
-					data: data,
-					error: err
-				}));
-			} else {
-				platform.handleException(err);
-			}
-		} else {
+	database.insert(data, function (insertError) {
+		if (!insertError) {
 			platform.log(JSON.stringify({
 				title: 'Record Successfully inserted to CouchDB.',
-				data: data,
-				key: body.id
+				data: data
 			}));
 		}
+
+		callback(insertError);
 	});
 };
 
 platform.on('data', function (data) {
-	if(isPlainObject(data)){
-		sendData(data);
+	if (isPlainObject(data)) {
+		sendData(data, (error) => {
+			if (error) platform.handleException(error);
+		});
 	}
-	else if(isArray(data)){
-		async.each(data, function(datum){
-			sendData(datum);
+	else if (isArray(data)) {
+		async.each(data, (datum, done) => {
+			sendData(datum, done);
+		}, (error) => {
+			if (error) platform.handleException(error);
 		});
 	}
 	else
@@ -47,20 +43,7 @@ platform.on('data', function (data) {
  * Emitted when the platform shuts down the plugin. The Storage should perform cleanup of the resources on this event.
  */
 platform.once('close', function () {
-	let d = require('domain').create();
-
-	d.once('error', function (error) {
-		console.error(error);
-		platform.handleException(error);
-		platform.notifyClose();
-		d.exit();
-	});
-
-	d.run(function () {
-		// TODO: Release all resources and close connections etc.
-		platform.notifyClose(); // Notify the platform that resources have been released.
-		d.exit();
-	});
+	platform.notifyClose();
 });
 
 /**
@@ -69,16 +52,15 @@ platform.once('close', function () {
  * @param {object} options The options or configuration injected by the platform to the plugin.
  */
 platform.once('ready', function (options) {
-	var	url      = options.host,
-		auth     = options.user + ':';
+	let url = `${options.host}`, auth = '';
 
-	if (options.password) auth = auth + options.password;
-	if (options.port) url = url + ':' + options.port;
+	if (options.user) auth = `${options.user}:${options.password}@`;
+	if (options.port) url = `${url}:${options.port}`;
 
-	var nano = require('nano')(options.connection_type + '://' + auth + '@' + url);
+	let nano = require('nano')(`${options.connection_type}://${auth}${options.url}`);
 
 	database = nano.use(options.database);
 
 	platform.notifyReady();
-	platform.log('CouchDB has been initialized.');
+	platform.log('CouchDB Storage has been initialized.');
 });

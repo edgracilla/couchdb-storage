@@ -1,41 +1,39 @@
-/* The config.json file is where you specify additional configuration needed by
- * your plugin. The details you specify here will be translated to a form on the
- * UI. The values supplied by the users will then get injected as options on the
- * platform on ready event.
- */
 {
   "host": {
 	"label": "Host",
 	"type": "String",
 	"required": true,
-	"help": "Host(s) for the CouchDB database."
+	"help": "Host for the CouchDB database connection."
   },
   "port": {
 	"label": "Port",
 	"type": "Number",
-	"required": false,
-	"help": "(Optional) Port for the CouchDB database."
+	"required": true,
+	"help": "Port for the CouchDB database connection."
   },
   "connection_type": {
 	"label": "Connection Type",
 	"type": "String",
 	"required": true,
-	"enum" : ["http", "https"],
-	"help": "Type of URL Connection to be used."
+	"enum": [
+	  "http",
+	  "https"
+	],
+	"help": "Type of connection to be used."
   },
-  "user" : {
+  "user": {
 	"label": "User",
 	"type": "String",
-	"required": true,
-	"help": "User for authentication."
+	"required": false,
+	"help": "(Options) User for authentication (Basic Auth)."
   },
-  "password" : {
+  "password": {
 	"label": "Password",
 	"type": "Password",
 	"required": false,
-	"help": "(Optional) Password for authentication."
+	"help": "(Optional) Password for authentication (Basic Auth)."
   },
-  "database" : {
+  "database": {
 	"label": "Database Name",
 	"type": "String",
 	"required": true,
