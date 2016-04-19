@@ -9,7 +9,7 @@ var uuid          = require('node-uuid'),
 
 let sendData = function (data, callback) {
 	if (!data._id) data._id = uuid.v4();
-
+	
 	database.insert(data, function (insertError) {
 		if (!insertError) {
 			platform.log(JSON.stringify({

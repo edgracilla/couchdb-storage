@@ -4,20 +4,19 @@
  */
 'use strict';
 
-var cp       = require('child_process'),
-	assert   = require('assert'),
-	should   = require('should'),
-	moment   = require('moment'),
+var cp     = require('child_process'),
+	assert = require('assert'),
+	should = require('should'),
+	moment = require('moment'),
 	storage;
 
-
-var HOST 	        = '52.91.127.32',
-	USER 	        = 'rozzwalla',
+var HOST            = '52.91.127.32',
+	USER            = 'rozzwalla',
 	PASSWORD        = 'reekoh',
-	PORT 	        = 5984,
+	PORT            = 5984,
 	CONNECTION_TYPE = 'http',
 	DATABASE        = 'reekoh_database',
-	ID  	        = new Date().getTime().toString();
+	ID              = new Date().getTime().toString();
 
 var record = {
 	_id: ID,
@@ -65,12 +64,12 @@ describe('Storage', function () {
 				type: 'ready',
 				data: {
 					options: {
-						host	          : HOST,
-						port              : PORT,
-						user	          : USER,
-						password          : PASSWORD,
-						connection_type   : CONNECTION_TYPE,
-						database          : DATABASE
+						host: HOST,
+						port: PORT,
+						user: USER,
+						password: PASSWORD,
+						connection_type: CONNECTION_TYPE,
+						database: DATABASE
 					}
 				}
 			}, function (error) {
@@ -94,15 +93,15 @@ describe('Storage', function () {
 
 
 			var nano     = require('nano')(CONNECTION_TYPE + '://' + USER + ':' + PASSWORD + '@' + HOST + ':' + PORT),
-			    database = nano.use('reekoh_database');
+				database = nano.use('reekoh_database');
 
-			database.get(ID, {}, function(err, result) {
+			database.get(ID, {}, function (err, result) {
 				should.equal(record.co2, result.co2, 'Data validation failed. Field: co2');
 				should.equal(record.temp, result.temp, 'Data validation failed. Field: temp');
 				should.equal(record.quality, result.quality, 'Data validation failed. Field: quality');
 				should.equal(record.random_data, result.random_data, 'Data validation failed. Field: random_data');
 				should.equal(moment(record.reading_time).format('YYYY-MM-DDTHH:mm:ss.SSSSZ'),
-					moment(result.reading_time).format('YYYY-MM-DDTHH:mm:ss.SSSSZ'),  'Data validation failed. Field: reading_time');
+					moment(result.reading_time).format('YYYY-MM-DDTHH:mm:ss.SSSSZ'), 'Data validation failed. Field: reading_time');
 				should.equal(JSON.stringify(record.metadata), JSON.stringify(result.metadata), 'Data validation failed. Field: metadata');
 				should.equal(record.is_normal, result.is_normal, 'Data validation failed. Field: is_normal');
 
