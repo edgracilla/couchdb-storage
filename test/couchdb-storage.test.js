@@ -58,6 +58,9 @@ describe('Storage', function () {
 			storage.on('message', function (message) {
 				if (message.type === 'ready')
 					done();
+				else if (message.type === 'error') {
+					console.log(message.data);
+				}
 			});
 
 			storage.send({

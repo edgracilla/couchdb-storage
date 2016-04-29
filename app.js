@@ -54,10 +54,10 @@ platform.once('close', function () {
 platform.once('ready', function (options) {
 	let url = `${options.host}`, auth = '';
 
-	if (options.user) auth = `${options.user}:${options.password}@`;
+	if (options.user || options.user) auth = `${options.user}:${options.password}@`;
 	if (options.port) url = `${url}:${options.port}`;
 
-	let nano = require('nano')(`${options.connection_type}://${auth}${options.url}`);
+	let nano = require('nano')(`${options.connection_type}://${auth}${url}`);
 
 	database = nano.use(options.database);
 
