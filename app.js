@@ -52,12 +52,20 @@ platform.once('close', function () {
  * @param {object} options The options or configuration injected by the platform to the plugin.
  */
 platform.once('ready', function (options) {
-	let url = `${options.host}`, auth = '';
+	let host = `${options.host}`, auth = '';
 
-	if (options.user || options.user) auth = `${options.user}:${options.password}@`;
-	if (options.port) url = `${url}:${options.port}`;
+	if (options.port)
+		host = `${host}:${options.port}`;
 
-	let nano = require('nano')(`${options.connection_type}://${auth}${url}`);
+	if (options.user)
+		auth = `${options.user}`;
+
+	if (options.password)
+		auth = `${auth}:${options.password}@`;
+	else if (options.user)
+		auth = `${auth}:@`;
+
+	let nano = require('nano')(`${options.connection_type}://${auth}${host}`);
 
 	database = nano.use(options.database);
 
