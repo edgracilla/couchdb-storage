@@ -11,7 +11,7 @@
 	"required": true,
 	"help": "Port for the CouchDB database connection."
   },
-  "connection_type": {
+  "connectionType": {
 	"label": "Connection Type",
 	"type": "String",
 	"required": true,

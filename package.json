@@ -1,33 +1,37 @@
 {
   "name": "couchdb-storage",
+  "version": "1.0.0",
   "description": "CouchDB storage plugin for Reekoh IoT Platform",
-  "version": "1.0.1",
   "author": "Reekoh, Inc.",
+  "license": "GPL-3.0",
   "main": "app.js",
   "scripts": {
-    "test": "gulp test"
+    "test": "gulp lint"
   },
   "repository": {
     "type": "git",
     "url": "https://github.com/Reekoh/couchdb-storage"
   },
   "dependencies": {
-    "async": "^1.5.2",
-    "lodash.isarray": "^4.0.0",
-    "lodash.isplainobject": "^4.0.4",
-    "moment": "^2.13.0",
-    "nano": "^6.2.0",
-    "node-uuid": "^1.4.7"
+    "reekoh": "=1.0.2",
+    "async": "=1.5.2",
+    "lodash.isarray": "=4.0.0",
+    "lodash.isplainobject": "=4.0.4",
+    "moment": "=2.13.0",
+    "nano": "=6.2.0",
+    "node-uuid": "=1.4.7"
   },
   "devDependencies": {
-    "gulp": "^3.9.1",
-    "gulp-cli": "^1.2.1",
-    "gulp-jshint": "^2.0.0",
-    "gulp-json-lint": "^0.1.0",
-    "gulp-mocha": "^2.2.0",
-    "gulp-plumber": "^1.1.0",
-    "mocha": "^2.3.4",
-    "should": "^8.3.1"
-  },
-  "license": "LGPL-3.0"
+    "amqplib": "=0.5.1",
+    "gulp": "=3.9.1",
+    "gulp-cli": "=1.2.1",
+    "gulp-jshint": "=2.0.1",
+    "gulp-json-lint": "=0.1.0",
+    "gulp-mocha": "=2.2.0",
+    "gulp-plumber": "=1.1.0",
+    "gulp-standard": "=8.0.4",
+    "jshint": "=2.9.4",
+    "mocha": "=2.5.3",
+    "should": "=9.0.2"
+  }
 }
